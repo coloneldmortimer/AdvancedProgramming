@@ -1,0 +1,11 @@
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Compilazione C++
+tests/1-test_class
+tests/1-test_class.dSYM/
+tests/2-test_temp
+tests/2-test_temp.dSYM/
