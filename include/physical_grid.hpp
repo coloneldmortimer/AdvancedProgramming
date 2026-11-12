@@ -1,9 +1,10 @@
 #ifndef PHYSICAL_GRID_HPP
 #define PHYSICAL_GRID_HPP
 
-#import <iostream>
+#include <iostream>
 #include <iomanip>
-#import "physical_constrains.hpp"
+#include "physical_constrains.hpp"
+#include "temperature_info.hpp"
 
 class Grid {
 private:
@@ -14,7 +15,12 @@ private:
 
 	// Method that returns the index of the point (i,j) in the vector
 	unsigned int index(unsigned int i, unsigned int j) const {
-		return i*nx + j;
+		return j*nx + i;
+	}
+
+	// Method that returns the index of the point (i,j) in the vector
+	unsigned int InternalPointsIndex(unsigned int i, unsigned int j) const {
+		return (j-1)*(nx-2) + (i-1);
 	}
 
 public:
@@ -35,6 +41,24 @@ public:
 
 	// Method for printing the vector in matrix form
 	void printMatrix();
+
+
+
+	// Method that returns the minimum temperature (and its index) of the solar panel grid
+	// getMinTemperature().value for minimum temperature
+	// getMinTemperature().index fir minimum temperature index
+	TemperatureInfo getMinTemperature();
+
+	// Method that returns the maximum temperature (and its index) of the solar panel grid
+	// getMaxTemperature().value for maximum temperature
+	// getMaxTemperature().index fir maximum temperature index
+	TemperatureInfo getMaxTemperature();
+
+	// Method that returns the mean temperature of the solar panel grid
+	double getMeanTemperature();
+
+	// Method that returns the difference between the maximum and the ambient temperature of the solar panel grid
+	double getDeltaTemperature();
 };
 
 #endif
