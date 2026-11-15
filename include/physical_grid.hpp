@@ -4,6 +4,8 @@
 #include <iostream>
 #include <iomanip>
 #include "temperature_info.hpp"
+#include <vector>
+#include "source.hpp"
 
 class Grid {
 private:
@@ -32,7 +34,10 @@ public:
 
 	// Method that returns the value of the point (x,y) of the matrix
 	double getValue (unsigned int x, unsigned int y);
-
+	
+	// Method that sets the temperature of a point
+	void setValue(unsigned int x, unsigned int y, double value);
+	
 	// Method that returns the total number of rows
 	int getTotRows();
 

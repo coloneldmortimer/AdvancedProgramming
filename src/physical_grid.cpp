@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <numeric>
+#include <stdexcept>
 #include <cmath>
 #include "../include/physical_constrains.hpp"
 #include "../include/physical_grid.hpp"
@@ -65,6 +66,14 @@ double Grid::getValue (unsigned int x, unsigned int y) {
 	return data[flatToIndex(x,y)];
 }
 
+void Grid::setValue(unsigned int x, unsigned int y, double value) {
+    if (x >= nx || y >= ny) {
+        throw std::out_of_range("Invalid grid coordinates");
+    }
+
+    data[flatToIndex(x,y)] = value;
+}
+
 int Grid::getTotRows() {
 	return ny;
 }
@@ -94,7 +103,7 @@ double Grid::getMeanTemperature(){
 
 TemperatureInfo Grid::getMinTemperature(){
 	double min = data[0];
-	int ind = 0;
+	unsigned int ind = 0;
 
 	for (int i = 1; i < data.size(); ++i) {
 		if (data[i] < min) {
@@ -109,7 +118,7 @@ TemperatureInfo Grid::getMinTemperature(){
 
 TemperatureInfo Grid::getMaxTemperature(){
 	double max = data[0];
-	int ind = 0;
+	unsigned int ind = 0;
 
 	for (int i = 1; i < data.size(); ++i) {
 		if (data[i] > max) {
