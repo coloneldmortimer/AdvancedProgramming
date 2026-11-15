@@ -12,10 +12,10 @@ private:
 
 public:
 
-    Source(double energy = 600, double energy_alt = 600, double x_min = 0.00, double x_max = 1.60, double y_min = 0.00, double y_max = 1.00)
+    Source(double energy, double energy_alt = 600, double x_min = 0.00, double x_max = 1.60, double y_min = 0.00, double y_max = 1.00)
     : energy(energy), energy_alt(energy_alt), x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max){}
     
-    double getenergy(double x, double y);
+    double getEnergy(double x, double y);
 };
 
 #endif

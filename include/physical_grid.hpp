@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <iomanip>
-#include "physical_constrains.hpp"
 #include "temperature_info.hpp"
 
 class Grid {
@@ -13,22 +12,23 @@ private:
 	unsigned int len;
 	std::vector<double> data;
 
-	// Method that returns the index of the point (i,j) in the vector
-	unsigned int index(unsigned int i, unsigned int j) const {
-		return j*nx + i;
-	}
+	// Method that returns the index in the vector of the point (i,j) of the flat grid
+	unsigned int flatToIndex(unsigned int i, unsigned int j) const;
 
-	// Method that returns the index of the point (i,j) in the vector
-	unsigned int InternalPointsIndex(unsigned int i, unsigned int j) const {
-		return (j-1)*(nx-2) + (i-1);
-	}
+	// Method that returns the index in the vector of the point (i,j) of the sparse matrix
+	unsigned int sparseToIndex(unsigned int i, unsigned int j) const;
+
+	// Method that returns the approximated index in the vector of the point (x,y)
+	unsigned int coordinatesToIndex(double x, double y) const;
 
 public:
 	// Constructor
+	// nx: number of columns of the grid (insert an integer value greater or equal to 3)
+	// ny: number of rows of the grid (insert an integer value greater or equal to 3)
 	Grid (unsigned int nx, unsigned int ny);
 
-	// Method that returns the index of the point (x,y) in the vector
-	unsigned int getIndex (unsigned int x, unsigned int y);
+	// Method that from returns the index of the point (x,y) of the flat matrix in the vector
+	int getIndex (unsigned int x, unsigned int y);
 
 	// Method that returns the value of the point (x,y) of the matrix
 	double getValue (unsigned int x, unsigned int y);
@@ -59,6 +59,11 @@ public:
 
 	// Method that returns the difference between the maximum and the ambient temperature of the solar panel grid
 	double getDeltaTemperature();
+
+
+
+	// Compute the temperature of the central point of a simple model (3x3 grid) - Avaiable for 3x3 models only
+	void computeSMTemperature (Source source);
 };
 
 #endif
