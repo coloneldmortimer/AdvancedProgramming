@@ -9,3 +9,5 @@ tests/1-test_class
 tests/1-test_class.dSYM/
 tests/2-test_temp
 tests/2-test_temp.dSYM/
+checkpoints/checkpoint_1
+checkpoints/checkpoint_1.dSYM/

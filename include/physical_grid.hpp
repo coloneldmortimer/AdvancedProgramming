@@ -23,6 +23,15 @@ private:
 	// Method that returns the approximated index in the vector of the point (x,y)
 	unsigned int coordinatesToIndex(double x, double y) const;
 
+	// Method that returns the coordinates (x,y) of in the panel of a given point of the flat matrix
+	std::pair<double, double> flatToCoordinates(unsigned int i, unsigned int j) const;
+
+	// Method that returns the point (i,j) of the flat grid given its index in the vector
+	std::pair<unsigned int, unsigned int> indexToFlat(unsigned int index) const;
+
+	// Method that returns the coordinates (x,y) of in the panel of a given index of the vector
+	std::pair<double, double> indexToCoordinates(unsigned int index) const;
+
 public:
 	// Constructor
 	// nx: number of columns of the grid (insert an integer value greater or equal to 3)
@@ -65,10 +74,13 @@ public:
 	// Method that returns the difference between the maximum and the ambient temperature of the solar panel grid
 	double getDeltaTemperature();
 
+	// Print temperature informations
+	void printTemperatureInfo();
+
 
 
 	// Compute the temperature of the central point of a simple model (3x3 grid) - Avaiable for 3x3 models only
-	void computeSMTemperature (Source source);
+	void computeSMTemperature (Source source);	
 };
 
 #endif

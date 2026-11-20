@@ -4,6 +4,7 @@
 #include <numeric>
 #include <stdexcept>
 #include <cmath>
+#include <utility>
 #include "../include/physical_constrains.hpp"
 #include "../include/physical_grid.hpp"
 
@@ -29,9 +30,9 @@ nx(nx), ny(ny), len(nx*ny), data(nx*ny, 0) {
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-// PRIVATE METHODS
+// COORDINATE CONVERSIONS
 
 unsigned int Grid::flatToIndex(unsigned int i, unsigned int j) const {
 	return j*nx + i;
@@ -45,7 +46,31 @@ unsigned int Grid::coordinatesToIndex(double x, double y) const {
 	return this->flatToIndex(std::round(x), std::round(y));
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+std::pair<double, double> Grid::flatToCoordinates(unsigned int i, unsigned int j) const {
+	double x = L_X * ((double) i / (nx-1));
+	double y = L_Y * ((double) j / (ny-1));
+
+	return std::make_pair(x, y);
+}
+
+std::pair<unsigned int, unsigned int> Grid::indexToFlat(unsigned int index) const {
+	unsigned int i = index / ny;
+	unsigned int j = index % ny;
+
+	return std::make_pair(i, j);
+}
+
+std::pair<double, double> Grid::indexToCoordinates(unsigned int index) const {
+	std::pair<unsigned int, unsigned int> flat_coordinates = this->indexToFlat(index);
+	double x = L_X * ((double) flat_coordinates.first / (nx-1));
+	double y = L_Y * ((double) flat_coordinates.second / (ny-1));
+
+	return std::make_pair(x, y);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 
 // GENERAL METHODS
@@ -92,7 +117,7 @@ void Grid::printMatrix() {
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // TEMPERATURE INFORMATIONS
 
@@ -135,12 +160,26 @@ double Grid::getDeltaTemperature(){
 	return this->getMaxTemperature().value - T_AMB;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void Grid::printTemperatureInfo(){
+	std::pair<double, double> maxCoordinates = this->indexToCoordinates(this->getMaxTemperature().index);
+
+	std::cout << "\nTemperature informations:"
+	<< "\nThe maximum temperature is " << this->getMaxTemperature().value
+	<< " F at point (" << maxCoordinates.first << ", " << maxCoordinates.second << ")."
+	<< "\nThe mean temperature is " << this->getMeanTemperature() << " F."
+	<< std::endl;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// SIMPLE MODEL SOLUTION
 
 void Grid::computeSMTemperature (Source source) {
-	if (this->len == 9){
-		this->data[4] = T_AMB + (source.getEnergy(0.8, 0.5)) / (2 * K * ((1.0 / (0.8 * 0.8)) + (1.0 / (0.5 * 0.5))) + H);
+	if (this->nx == 3 && this->ny == 3){
+		this->data[4] = T_AMB
+		+ (source.getEnergy(0.8, 0.5)) / (2 * K * ((1.0 / (0.8 * 0.8))
+			+ (1.0 / (0.5 * 0.5))) + H);
 	} else {
 		return throw std::runtime_error("Error: The specified grid is not a 3x3 grid. Remember, this method works just for simple 3x3 grids!");
 	}

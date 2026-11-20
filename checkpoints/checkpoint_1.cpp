@@ -14,7 +14,7 @@ int main() {
     gridOne.computeSMTemperature(unif);
 	gridOne.printMatrix();
 
-	std::cout << "\n3. Jacobi solution for a 9x7 grid." << std::endl;
+	std::cout << "\n3. Jacobi solution for a 9x7 grid and temperature informations" << std::endl;
 	Grid gridTwo(9, 7);
 	JacobiResult jacobiTwo(gridTwo);
 	jacobiTwo.calculateSolution(1E-10, 1E6);

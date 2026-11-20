@@ -12,9 +12,13 @@ private:
 
 public:
 
-    Source(double energy, double energy_alt = 600, double x_min = 0.00, double x_max = 1.60, double y_min = 0.00, double y_max = 1.00)
-    : energy(energy), energy_alt(energy_alt), x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max){}
-    
+    // Constructor
+    // energy: value of energy inside the boundaries
+    // energy_alt: value of energy outside the boundaries
+    //x_min, x_max, y_min, y_max: boundaries
+    Source(double energy, double energy_alt = 600, double x_min = 0.00, double x_max = 1.60, double y_min = 0.00, double y_max = 1.00);
+
+    // Return the energy for the point (x,y)
     double getEnergy(double x, double y);
 };
 

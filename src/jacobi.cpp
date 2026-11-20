@@ -1,10 +1,18 @@
-#include "jacobi.hpp"
-#include "physical_constrains.hpp"
+#include <iostream>
 #include <cmath>
 #include <stdexcept>
 #include <utility>
+#include "../include/jacobi.hpp"
+#include "../include/physical_constrains.hpp"
 
-JacobiResult jacobi(unsigned int nx, unsigned int ny, double tolerance, unsigned int maxIterations){
+JacobiResult::JacobiResult(Grid& grid):
+grid(grid), converged(0), iterations(0), finalUpdate(0) {}
+
+void JacobiResult::calculateSolution(double tolerance, unsigned int maxIterations) {
+
+    unsigned int nx = grid.getTotColumns();
+    unsigned int ny = grid.getTotRows();
+
 
     if(nx < 3 || ny < 3 || tolerance <= 0 || !std::isfinite(tolerance) || maxIterations == 0){
         throw std::invalid_argument("Invalid Jacobi parameters");
@@ -17,7 +25,6 @@ JacobiResult jacobi(unsigned int nx, unsigned int ny, double tolerance, unsigned
     }
     Grid oldGrid(nx, ny);
     Grid newGrid(nx, ny);
-    Source uniform(600.0);
 
     for(unsigned int j=0; j<ny; j++){
         for(unsigned int i=0; i<nx; i++){
@@ -42,7 +49,7 @@ JacobiResult jacobi(unsigned int nx, unsigned int ny, double tolerance, unsigned
                 double right = oldGrid.getValue(i+1, j);
                 double top = oldGrid.getValue(i, j+1);
                 double bottom = oldGrid.getValue(i, j-1);
-                double q = uniform.getEnergy(i*dx, j*dy);
+                double q = unif.getEnergy(i*dx, j*dy);
                 
                 double newValue = (q + H*T_AMB +
                     ax*(left+right) + ay*(top+bottom)) / denominator;
@@ -66,5 +73,27 @@ JacobiResult jacobi(unsigned int nx, unsigned int ny, double tolerance, unsigned
         }
     }
 
-    return {oldGrid, converged, k, maxChange};
+
+    // Update the values of the object
+    this->grid = oldGrid;
+    this->converged = converged;
+    this-> iterations = k;
+    this->finalUpdate = maxChange;
+
+    // Print the result
+    this->grid.printMatrix();
+    this->printJacobiInfo();
+    this->grid.printTemperatureInfo();
+}
+
+void JacobiResult::printJacobiInfo(){
+    std::cout << "\nJacobi execution informations:";
+    if (this->converged == true){
+        std::cout << "\nSolution calculated in "
+        << this->iterations << " iterations with a residual error of "
+        << this->finalUpdate << "." << std::endl;
+    } else{
+        std::cout << "\nJacobi didn't converge, solution not avaible for used conditions."
+        << std::endl;
+    }
 }
